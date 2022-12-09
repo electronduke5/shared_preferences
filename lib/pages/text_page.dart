@@ -8,6 +8,8 @@ class TextPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? text;
+    final args = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 150.0, vertical: 100),
@@ -20,8 +22,22 @@ class TextPage extends StatelessWidget {
                   future: getText(),
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (args == null) {
+                      text = snapshot.data;
+                      if (text == null) {
+                        return Text(
+                          'Ошибка',
+                          style: Theme.of(context).textTheme.headline4,
+                        );
+                      }
+                      return Text(
+                        'Текст из Shared Preferences: ${text!}',
+                        style: Theme.of(context).textTheme.headline4,
+                      );
+                    }
+                    text = args as String;
                     return Text(
-                      snapshot.data.toString(),
+                      'Текст из аргументов: ${text!}',
                       style: Theme.of(context).textTheme.headline4,
                     );
                   },
